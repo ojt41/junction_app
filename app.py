@@ -592,5 +592,6 @@ def internal_error(error):
 
 if __name__ == '__main__':
     logger.info("Starting EASA Part-145 Compliance Platform...")
-    logger.info("Access the dashboard at: http://localhost:5000")
-    app.run(debug=True, port=5000, host='0.0.0.0')
+    port = int(os.environ.get('PORT', 5000))
+    logger.info(f"Access the dashboard at: http://localhost:{port}")
+    app.run(debug=False, port=port, host='0.0.0.0')
