@@ -187,6 +187,19 @@ def serve_public(filename):
     """Serve public static files."""
     return send_from_directory('public', filename)
 
+@app.route('/junction.pdf')
+def serve_junction_pdf():
+    """Serve the junction.pdf file from the application directory."""
+    try:
+        app_dir = Path(__file__).resolve().parent
+        pdf_path = app_dir / 'junction.pdf'
+        if not pdf_path.exists():
+            return jsonify({"error": "junction.pdf not found"}), 404
+        return send_from_directory(str(app_dir), 'junction.pdf')
+    except Exception as e:
+        logger.error(f"Error serving junction.pdf: {e}")
+        return jsonify({"error": "Unable to serve junction.pdf"}), 500
+
 @app.route('/api/upload', methods=['POST'])
 def upload_document():
     """API endpoint to upload and analyze a document against compliance requirements."""

@@ -1337,7 +1337,7 @@
 
 <body>
     <!-- Hero Landing Page -->
-    <div id="heroLanding" class="hero-landing" style="display: flex;">
+    <div id="heroLanding" class="hero-landing" style="display: none;">
         <div class="hero-content">
             <div class="hero-badge">
                 <i class="fas fa-award"></i> Junction 2025 Hackathon Finalist
@@ -1414,7 +1414,7 @@
     </div>
 
     <!-- Sidebar Navigation -->
-    <aside class="sidebar" style="display: none;">
+    <aside class="sidebar" style="display: flex;">
         <div class="sidebar-header">
             <div class="sidebar-logo">
                 <div class="logo-icon">
@@ -1446,7 +1446,7 @@
 
             <div class="nav-section">
                 <div class="nav-section-title">Tools</div>
-                <a href="#" class="nav-item" data-section="reports">
+                <a href="/junction.pdf" class="nav-item">
                     <i class="fas fa-file-alt"></i>
                     <span>Reports</span>
                 </a>
@@ -1473,7 +1473,7 @@
     <div class="main-content">
         <!-- Traficom Header Banner -->
         <div id="traficomHeader"
-            style="background: var(--primary); color: white; padding: 12px 40px; display: none; justify-content: space-between; align-items: center; border-bottom: 3px solid var(--secondary);">
+            style="background: var(--primary); color: white; padding: 12px 40px; display: flex; justify-content: space-between; align-items: center; border-bottom: 3px solid var(--secondary);">
             <div style="display: flex; align-items: center; gap: 15px;">
                 <i class="fas fa-plane" style="font-size: 1.3rem;"></i>
                 <div>
@@ -1588,7 +1588,7 @@
         </div>
 
         <!-- Top Bar -->
-        <div class="top-bar" id="topBar" style="display: none;">
+        <div class="top-bar" id="topBar">
             <div class="top-bar-content">
                 <div class="page-title-section">
                     <h1>Compliance Dashboard</h1>
@@ -1616,7 +1616,7 @@
             <div class="loading-text">Loading compliance data...</div>
         </div>
 
-        <div id="dashboard" style="display: none;">
+        <div id="dashboard" style="display: block;">
             <div class="content-wrapper">
                 <!-- KPI Cards -->
                 <div class="kpi-grid" id="kpiSection">
@@ -1839,9 +1839,22 @@
         // Initialize on page load
         document.addEventListener('DOMContentLoaded', () => {
             setupNavigation();
-            // Set no-scroll on body initially (hero page is visible)
-            document.body.classList.add('no-scroll');
-            // Don't auto-load dashboard - wait for user to proceed from upload page
+            // Ensure main dashboard Overview is shown by default
+            document.getElementById('heroLanding').style.display = 'none';
+            const sidebar = document.querySelector('.sidebar');
+            if (sidebar) sidebar.style.display = 'flex';
+            const header = document.getElementById('traficomHeader');
+            if (header) header.style.display = 'flex';
+            const topBar = document.getElementById('topBar');
+            if (topBar) topBar.style.display = 'block';
+            const dashboard = document.getElementById('dashboard');
+            if (dashboard) dashboard.style.display = 'block';
+            document.body.classList.remove('no-scroll');
+            // Set breadcrumb and section
+            const breadcrumb = document.getElementById('currentSection');
+            if (breadcrumb) breadcrumb.textContent = 'Overview';
+            showSection('overview');
+            loadDashboard();
         });
 
         // Handle file selection
@@ -1947,7 +1960,7 @@
 
         // Export Report
         function exportReport() {
-            alert('Export functionality will be available soon!\\nThis will generate PDF/Excel reports of compliance findings.');
+            window.location.href = '/junction.pdf';
         }
 
         async function loadJudgingCriteria() {
@@ -2601,13 +2614,8 @@
                     loadJudgingCriteria();
                     break;
                 case 'reports':
-                    // Show download/export options
-                    if (kpiSection) kpiSection.style.display = 'grid';
-                    if (chartsSection) chartsSection.style.display = 'none';
-                    if (filtersSection) filtersSection.style.display = 'none';
-                    if (findingsList) findingsList.style.display = 'none';
-                    if (judgingSection) judgingSection.style.display = 'none';
-                    alert('Export functionality: You can download reports from the /outputs folder');
+                    // Navigate to the PDF report page
+                    window.location.href = '/junction.pdf';
                     break;
             }
         }
